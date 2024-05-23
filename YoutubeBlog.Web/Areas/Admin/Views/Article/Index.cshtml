@@ -44,7 +44,15 @@
                             <th>@item.CreatedDate.ToShortDateString()</th>
                             <th>@item.CreatedBy</th>
                             <th>@(item.IsDeleted ? "Aktif değil" : "Aktif")</th>
-                            <th></th>
+                            <th>
+                                <a 
+                                   class="btn btn-primary btn-sm"
+                                   data-id="@item.Id"
+                                   asp-area="Admin"
+                                   asp-controller="Article"
+                                   asp-action="Update"
+                                   asp-route-articleId="@item.Id"><i class="bx bxs-edit"></i></a>
+                            </th>
                         </tr>
                     }
                 </tbody>
