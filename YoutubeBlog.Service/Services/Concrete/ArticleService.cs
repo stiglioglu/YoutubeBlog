@@ -25,13 +25,13 @@ namespace YoutubeBlog.Service.Services.Concrete
         public async Task CreateArticleAsync(ArticleAddDto articleAddDto)
         {
             var userId = Guid.Parse("93005E5F-433A-4D09-9F3E-5702DF10F77B");
-            var article = new Article
-            {
-                Title = articleAddDto.Title,
-                Content = articleAddDto.Content,
-                CategoryId = articleAddDto.CategoryId,
-                UserId = userId
-            };
+            var imageId = Guid.Parse("FC736561-06D2-473E-B4C7-FEA7884A488E");
+            var article = new Article(
+                articleAddDto.Title, 
+                articleAddDto.Content, 
+                userId,articleAddDto.CategoryId, 
+                imageId
+            );
             await unitOfWork.GetRepository<Article>().AddAsync(article);
             await unitOfWork.SaveAsync();
         }
@@ -57,6 +57,15 @@ namespace YoutubeBlog.Service.Services.Concrete
             article.Title = articleUpdateDto.Title;
             article.Content = articleUpdateDto.Content;
             article.CategoryId = articleUpdateDto.CategoryId;
+
+            await unitOfWork.GetRepository<Article>().UpdateAsync(article);
+            await unitOfWork.SaveAsync();
+        }
+        public async Task SafeDeleteArticleAsync(Guid articleId)
+        {
+            var article = await unitOfWork.GetRepository<Article>().GetByGuidAsync(articleId);
+            article.IsDeleted = true;
+            article.DeletedDate = DateTime.Now;
 
             await unitOfWork.GetRepository<Article>().UpdateAsync(article);
             await unitOfWork.SaveAsync();
