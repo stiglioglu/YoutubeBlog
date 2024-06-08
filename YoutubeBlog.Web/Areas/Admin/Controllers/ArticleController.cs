@@ -18,13 +18,15 @@ namespace YoutubeBlog.Web.Areas.Admin.Controllers
         private readonly IMapper mapper;
         private readonly IValidator<Article> validator;
         private readonly IToastNotification toast;
+        private readonly IImageService imageService;
 
         public ArticleController(
             IArticleService articleService, 
             ICategoryService categoryService, 
             IMapper mapper,
             IValidator<Article> validator,
-            IToastNotification toast
+            IToastNotification toast,
+            IImageService imageService
         )
         {
             this.articleService = articleService;
@@ -32,6 +34,7 @@ namespace YoutubeBlog.Web.Areas.Admin.Controllers
             this.mapper = mapper;
             this.validator = validator;
             this.toast = toast;
+            this.imageService = imageService;
         }
         public async Task<IActionResult> Index()
         {
@@ -97,7 +100,9 @@ namespace YoutubeBlog.Web.Areas.Admin.Controllers
             }
 
             var categories = await categoryService.GetAllCategoriesNonDeleted();
+            var images = await imageService.GetImageByArticleId(articleUpdateDto.Id);
             articleUpdateDto.Categories = categories;
+            articleUpdateDto.Image = images;
             return View(articleUpdateDto);
         }
         [HttpGet]

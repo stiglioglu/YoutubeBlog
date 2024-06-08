@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using YoutubeBlog.Entity.DTOs.Articles.Categories;
+using YoutubeBlog.Entity.Entities;
 
 namespace YoutubeBlog.Entity.DTOs.Articles
 {
@@ -14,6 +15,7 @@ namespace YoutubeBlog.Entity.DTOs.Articles
         public string Content { get; set; }
         public CategoryDto Category { get; set; }
         public DateTime CreatedDate { get; set; }
+        public Image Image { get; set; }
         public string CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
     }

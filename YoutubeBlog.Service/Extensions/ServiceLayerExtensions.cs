@@ -20,6 +20,7 @@ namespace YoutubeBlog.Service.Extensions
             services.AddScoped<IArticleService,ArticleService>();
             services.AddScoped<ICategoryService,CategoryService>();
             services.AddScoped<IImageHelper,ImageHelper>();
+            services.AddScoped<IImageService,ImageService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

@@ -4,7 +4,9 @@ using System.Security.Claims;
 using YoutubeBlog.Data.UnitOfWorks;
 using YoutubeBlog.Entity.DTOs.Articles;
 using YoutubeBlog.Entity.Entities;
+using YoutubeBlog.Entity.Enums;
 using YoutubeBlog.Service.Extensions;
+using YoutubeBlog.Service.Helpers.Images;
 using YoutubeBlog.Service.Services.Abstractions;
 
 namespace YoutubeBlog.Service.Services.Concrete
@@ -14,41 +16,41 @@ namespace YoutubeBlog.Service.Services.Concrete
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IImageHelper imageHelper;
         private readonly ClaimsPrincipal _user;
 
-        public ArticleService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public ArticleService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor, IImageHelper imageHelper)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
             this.httpContextAccessor = httpContextAccessor;
+            this.imageHelper = imageHelper;
             _user = httpContextAccessor.HttpContext.User;
         }
         public async Task CreateArticleAsync(ArticleAddDto articleAddDto)
         {
             var userId = _user.GetLoggedInUserId();
             var userEmail = _user.GetLoggedInEmail();
-            var imageId = Guid.Parse("FC736561-06D2-473E-B4C7-FEA7884A488E");
-            var article = new Article(
-                articleAddDto.Title,
-                articleAddDto.Content,
-                userId,
-                userEmail,
-                articleAddDto.CategoryId,
-                imageId
-            );
+
+            var imageUpload = await imageHelper.Upload(articleAddDto.Title, articleAddDto.Photo, ImageType.Post);
+            Image image = new(imageUpload.FullName, articleAddDto.Photo.ContentType, userEmail);
+            await unitOfWork.GetRepository<Image>().AddAsync(image);
+
+            var article = new Article(articleAddDto.Title, articleAddDto.Content, userId, userEmail, articleAddDto.CategoryId, image.Id);
+
             await unitOfWork.GetRepository<Article>().AddAsync(article);
             await unitOfWork.SaveAsync();
         }
         public async Task<List<ArticleDto>> GetAllArticlesWithCategoryNonDeletedAsync()
         {
-            var articles = await unitOfWork.GetRepository<Article>().GetAllAsync(x=>x.IsDeleted==false,x=>x.Category);
+            var articles = await unitOfWork.GetRepository<Article>().GetAllAsync(x => x.IsDeleted == false, x => x.Category);
             var map = mapper.Map<List<ArticleDto>>(articles);
 
             return map;
         }
         public async Task<ArticleDto> GetArticleWithCategoryNonDeletedAsync(Guid articleId)
         {
-            var article = await unitOfWork.GetRepository<Article>().GetAsync(x => x.IsDeleted == false && x.Id == articleId, x => x.Category);
+            var article = await unitOfWork.GetRepository<Article>().GetAsync(x => x.IsDeleted == false && x.Id == articleId, x => x.Category, x => x.Image);
             var map = mapper.Map<ArticleDto>(article);
 
             return map;
@@ -57,7 +59,16 @@ namespace YoutubeBlog.Service.Services.Concrete
         {
             var userEmail = _user.GetLoggedInEmail();
 
-            var article = await unitOfWork.GetRepository<Article>().GetAsync(x => x.IsDeleted == false && x.Id == articleUpdateDto.Id, x => x.Category);
+            var article = await unitOfWork.GetRepository<Article>().GetAsync(x => x.IsDeleted == false && x.Id == articleUpdateDto.Id, x => x.Category, x => x.Image);
+
+            if (articleUpdateDto.Photo != null)
+            {
+                imageHelper.Delete(article.Image.FileName);
+                var imageUpload = await imageHelper.Upload(articleUpdateDto.Title, articleUpdateDto.Photo, ImageType.Post);
+                Image image = new(imageUpload.FullName, articleUpdateDto.Photo.ContentType, userEmail);
+                await unitOfWork.GetRepository<Image>().AddAsync(image);
+                article.ImageId = image.Id;
+            }
 
             article.Title = articleUpdateDto.Title;
             article.Content = articleUpdateDto.Content;

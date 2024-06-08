@@ -9,10 +9,11 @@ namespace YoutubeBlog.Entity.Entities
         {
             
         }
-        public Image(string fileName, string fileType)
+        public Image(string fileName, string fileType, string createdBy)
         {
             FileName = fileName;
             FileType = fileType;
+            CreatedBy = createdBy;
         }
         public Guid Id { get; set; }
         public string FileName { get; set; }

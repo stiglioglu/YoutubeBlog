@@ -1,4 +1,5 @@
-﻿using YoutubeBlog.Entity.DTOs.Articles.Categories;
+﻿using Microsoft.AspNetCore.Http;
+using YoutubeBlog.Entity.DTOs.Articles.Categories;
 
 namespace YoutubeBlog.Entity.DTOs.Articles
 {
@@ -7,6 +8,7 @@ namespace YoutubeBlog.Entity.DTOs.Articles
         public string Title { get; set; }
         public string Content { get; set; }
         public Guid CategoryId { get; set; }
+        public IFormFile Photo { get; set; }
         public IList<CategoryDto> Categories { get; set; }
     }
 }
