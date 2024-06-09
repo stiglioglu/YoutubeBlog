@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using YoutubeBlog.Entity.DTOs.Articles.Categories;
+using YoutubeBlog.Entity.DTOs.Categories;
 using YoutubeBlog.Entity.Entities;
 
 namespace YoutubeBlog.Entity.DTOs.Articles

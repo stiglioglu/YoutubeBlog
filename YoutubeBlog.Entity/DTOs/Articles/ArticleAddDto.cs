@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using YoutubeBlog.Entity.DTOs.Articles.Categories;
+using YoutubeBlog.Entity.DTOs.Categories;
 
 namespace YoutubeBlog.Entity.DTOs.Articles
 {

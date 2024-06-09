@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YoutubeBlog.Entity.DTOs.Articles.Categories
+namespace YoutubeBlog.Entity.DTOs.Categories
 {
-    public class CategoryDto
+    public class CategoryAddDto
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }
