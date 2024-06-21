@@ -111,7 +111,7 @@
 
                 <ul class="menu-inner py-1">
                     <!-- Dashboard -->
-                    <li class="menu-item active">
+                    <li class="menu-item @(ViewContext.RouteData.Values["controller"].ToString() == "Home" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")">
                         <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="menu-link">
                             <i class='menu-icon bx bxs-dashboard'></i>
                             <div data-i18n="Analytics">Gösterge Paneli</div>
@@ -122,21 +122,21 @@
                         <span class="menu-header-text">SAYFA YÖNETİMİ</span>
                     </li>
 
-                    <li class="menu-item">
+                    <li class="menu-item @(ViewContext.RouteData.Values["controller"].ToString() == "Article" ? "active" : "")">
                         <a asp-area="Admin" asp-controller="Article" asp-action="Index" class="menu-link">
                             <i class='menu-icon bx bx-paper-plane'></i>
                             <div data-i18n="Analytics">Makale Yönetimi</div>
                         </a>
                     </li>
 
-                    <li class="menu-item">
+                    <li class="menu-item @(ViewContext.RouteData.Values["controller"].ToString() == "Category" ? "active" : "")">
                         <a asp-area="Admin" asp-controller="Category" asp-action="Index" class="menu-link">
                             <i class='menu-icon bx bx-category'></i>
                             <div data-i18n="Analytics">Kategori Yönetimi</div>
                         </a>
                     </li>
 
-                    <li class="menu-item">
+                    <li class="menu-item @(ViewContext.RouteData.Values["controller"].ToString() == "SocialMedia" ? "active" : "")">
                         <a asp-area="Admin" asp-controller="SocialMedia" asp-action="Index" class="menu-link">
                             <i class='menu-icon bx bx-cube-alt'></i>
                             <div data-i18n="Analytics">Medya Yönetimi</div>
@@ -198,7 +198,7 @@
                                 </a>
                             </li>
                         </ul>
-                        
+
                     </li>
                 </ul>
             </aside>
